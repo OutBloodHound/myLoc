@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ItemController!
+{% endblock %}
+
+{% block body %}
+
+		<div class="container text-center">
+			<div class="gap-3 row row-cols-3">
+				{% for item in items %}
+					<div class="card" style="width: 18rem;">
+						<img src="{{ asset('uploads/img/'~ item.picture ) }}" class="card-img-top" alt="...">
+						<div class="card-body">
+							<h5 class="card-title"> {{  item.name }} </h5>
+							<p class="card-text">{{ item.description|u.truncate(50,'...') }}</p>
+							<a href="item/{{ item.id }}" class="btn btn-primary">Go somewhere</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+{% endblock %}

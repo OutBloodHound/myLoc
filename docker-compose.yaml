@@ -1,0 +1,31 @@
+
+services:
+  mysql_mylock:
+    image: mysql:8.0
+    container_name: mysql_mylock
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword   # mot de passe root
+      MYSQL_DATABASE: mylock        # nom de la base créée au démarrage
+      MYSQL_USER: hugo                # utilisateur
+      MYSQL_PASSWORD: hugo123        # mot de passe utilisateur
+    ports:
+      - "3309:3306"
+    volumes:
+      - mysql_mylock_data:/var/lib/mysql         # persistance des données
+
+  phpmyadmin_mylock:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_mylock
+    restart: always
+    environment:
+      PMA_HOST: mysql_mylock                    # nom du service MySQL
+      PMA_USER: hugo                     # utilisateur MySQL (souvent root)
+      PMA_PASSWORD: hugo123        # mot de passe MySQL
+    ports:
+      - "8900:80"                         # accès via http://localhost:8080
+    depends_on:
+      - mysql_mylock
+
+volumes:
+  mysql_mylock_data:
