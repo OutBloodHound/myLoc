@@ -18,14 +18,14 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{id}', name: 'app_category')]
-    public function show(int $id, CategoryRepository  $cr): Response 
+    #[Route('/category/{id}', name: 'app_categoryShow')]
+    public function show(int $id, CategoryRepository  $cr,): Response 
     {
         //aller chercher l'objet de categorie correspondant à l'id
-        $categorie = $cr->find($id);
+        $category = $cr->find($id);
         
         return $this->render('category/show.html.twig', [
-            'categorie' => $categorie,
+            'category' => $category
         ]);
     }
 }

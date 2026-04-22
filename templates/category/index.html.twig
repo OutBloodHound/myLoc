@@ -3,18 +3,22 @@
 {% block title %}Hello CategoryController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Projet/MyLock/src/Controller/CategoryController.php</code></li>
-        <li>Your template at <code>D:/Projet/MyLock/templates/category/index.html.twig</code></li>
-    </ul>
-</div>
+<section class="categories-section" id="categories">
+    <div class="container">
+        <h2 class="section-title">Explorez par catégorie</h2>
+        <p class="section-subtitle">
+            Des milliers d'objets disponibles dans toutes les catégories du quotidien
+        </p>
+        <div class="row g-4">
+            {% for category in categories %}
+                <a href="{{ path('app_categoryShow', {id: category.id}) }}" class="col-md-4">
+                    <div class="category-card">
+                        <img src="{{ category.picture }}" alt="...">
+                        <div class="category-name">{{category.name}}</div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}
