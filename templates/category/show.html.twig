@@ -1,20 +1,44 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ category.name }} — myLoc{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{{ path('home') }}">Accueil</a>
+    <span>›</span>
+    {{ category.name }}
+{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <h1 class="my-5">{{ category.name }}</h1>
-        <div class="row gap-3 mb-5">
-            {% for item in category.items %}
-                <div class="card p-0" style="width: 18rem;">
-                            {# <img src="{{ asset('uploads/img/'~ item.picture ) }}" class="card-img-top" alt="..."> #}
-                            <img src="{{ item.picture }}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"> {{  item.name }} </h5>
-                                <p class="card-text">{{ item.description|u.truncate(50,'...') }}</p>
-                                <a href="/item/{{ item.id }}" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-            {% endfor %}
-        </div>
+<div class="container cat-page-show">
+
+    <div class="cat-header-show">
+        <div class="cat-label-show">Catégorie</div>
+        <h1 class="cat-title-show">{{ category.name }}</h1>
+        <div class="cat-count-show">{{ category.items|length }} objet{{ category.items|length > 1 ? 's' : '' }} disponible{{ category.items|length > 1 ? 's' : '' }}</div>
     </div>
+
+    <div class="items-grid-show">
+        {% for item in category.items %}
+        <a href="{{ path('app_item_show', {id: item.id}) }}" class="item-card-show">
+            <div class="item-thumb-show">
+                {% if item.picture %}
+                    <img src="{{ asset('uploads/img/' ~ item.picture) }}" alt="{{ item.name }}">
+                {% else %}
+                    <div class="item-thumb-placeholder-show">📦</div>
+                {% endif %}
+            </div>
+            <div class="item-body-show">
+                <div class="item-name-show">{{ item.name }}</div>
+                <div class="item-desc-show">{{ item.description|u.truncate(80, '...') }}</div>
+                <div class="item-cta-show">
+                    <span class="item-btn-show">Voir l'objet →</span>
+                </div>
+            </div>
+        </a>
+        {% else %}
+            <p class="empty-show">Aucun objet dans cette catégorie pour le moment.</p>
+        {% endfor %}
+    </div>
+
+</div>
 {% endblock %}

@@ -1,20 +1,86 @@
+{# templates/user/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Mon espace — myLoc{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="page container py-4">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        {# En-tête utilisateur #}
+        <div class="dash-header">
+            <div class="dash-avatar">
+                {{ app.user.email|first|upper }}
+            </div>
+            <div class="dash-hello">
+                <strong>Bonjour, {{ app.user.username }}</strong>
+                <span>{{ app.user.username }}</span>
+            </div>
+        </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/Projet/MyLock/src/Controller/UserController.php</code></li>
-        <li>Your template at <code>D:/Projet/MyLock/templates/user/index.html.twig</code></li>
-    </ul>
-</div>
+        {# Métriques #}
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-label">Points myLoc</div>
+                <div class="metric-value">{{ app.user.points }}</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Biens déposés</div>
+                <div class="metric-value">{{ items|length }}</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Prêts réalisés</div>
+                <div class="metric-value">{{ loans|length }}</div>
+            </div>
+        </div>
+
+        {# Mes biens #}
+        <div class="section-title">Mes biens</div>
+        <div class="items-grid">
+            {% for item in items %}
+            <a href="{{ path('app_item_show', {id: item.id}) }}" class="item-card">
+                <div class="item-thumb">
+                    {% if item.picture %}
+                        <img src="{{ asset('uploads/img/' ~ item.picture) }}" alt="{{ item.name }}">
+                    {% else %}
+                        📦
+                    {% endif %}
+                </div>
+                <div class="item-body">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-cat">{{ item.category.name }}</div>
+                </div>
+            </a>
+            {% endfor %}
+
+            {# Bouton ajouter #}
+            <a href="#" class="item-add">
+                + Ajouter un bien
+            </a>
+        </div>
+
+        {# Prêts en cours #}
+        <div class="section-title">Prêts en cours</div>
+        <div class="loans-list">
+            {% for loan in loans %}
+            <div class="loan-row">
+                <div class="loan-main">
+                    <span class="loan-item-name">{{ loan.item.name }}</span>
+                    <span class="loan-borrower">
+                        Emprunté par {{ loan.user.email }}.
+                    </span>
+                    <span class="loan-dates">
+                        {{ loan.start|date('d M') }} → {{ loan.end|date('d M Y') }}
+                    </span>
+                </div>
+                <span class="badge {{ loan.start > date() ? 'badge-soon' : 'badge-active' }}">
+                    {{ loan.start > date() ? 'À venir' : 'En cours' }}
+                </span>
+            </div>
+            {% else %}
+                <p style="color: var(--neutral-dark); opacity: .5;">Aucun prêt en cours.</p>
+            {% endfor %}
+        </div>
+
+    </div>
 {% endblock %}
+

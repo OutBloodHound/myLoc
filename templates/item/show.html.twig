@@ -1,14 +1,80 @@
+{# templates/item/show.html.twig #}
 {% extends 'base.html.twig' %}
 
+{% block title %}
+	{{ item.name }}
+	— myLoc
+{% endblock %}
+
 {% block body %}
-	<div class="container">
-		<img src="{{ asset('uploads/img/'~ item.picture ) }}" class="" alt="...">
-		<div class="">
-			<h5 class="">
-				{{  item.name }}
-			</h5>
-			<p class="">{{ item.description}}</p>
-			<a href="item/{{ item.id }}" class="btn btn-primary">Emprunter</a>
+	<div class="page container py-4">
+
+		{# Breadcrumb #}
+		<nav class="breadcrumb">
+			<a href="{{ path('app_home') }}">Accueil</a>
+			<span>›</span>
+			<a href="{{ path('app_categoryShow', {id: item.category.id}) }}">
+				{{ item.category.name }}
+			</a>
+			<span>›</span>
+			{{ item.name }}
+		</nav>
+
+		<div class="item-card">
+
+			{# Photo de l'objet #}
+			<div class="item-gallery">
+				<img
+				src="{{ asset('uploads/img/' ~ item.picture) }}" alt="{{ item.name }}">
+				{# Dégradé décoratif avec la catégorie #}
+				<div class="item-badge-cat">
+					<span>Catégorie</span>
+					<strong>{{ item.category.name }}</strong>
+				</div>
+			</div>
+
+			{# Informations #}
+			<div
+				class="item-info">
+
+				{# Pill décorative #}
+				<div class="deco-pill">🌱 myLoc — prêt entre particuliers</div>
+
+				<h1 class="item-title">{{ item.name }}</h1>
+
+				<hr
+				class="divider">
+
+				{# Description avec guillemet décoratif #}
+				<div class="desc-wrapper">
+					<p class="item-desc">{{ item.description }}</p>
+				</div>
+
+				<hr class="divider">
+
+				{# Lien vers le formulaire de location #}
+				{% if app.user == item.owner %}
+					<a href="#" class="btn btn-primary-custom w-50 m-auto">Modifier</a>
+				{% elseif app.user %}
+					<a href="{{ path('app_loan', {id: item.id}) }}" class="btn btn-primary-custom w-50 m-auto">Réserver</a>
+				{% else %}
+					<a href="{{ path('app_login') }}" class="btn btn-primary-custom w-50 m-auto">Connexion</a>
+				{% endif %}
+					
+					
+
+				{# Propriétaire (via owner_id) #}
+				<div class="owner-block">
+					<div class="owner-avatar">
+						{{ item.owner.username|first|upper }}
+					</div>
+					<div class="owner-details">
+						<span class="owner-label">Proposé par</span>
+						<span class="owner-name">{{ item.owner.username }}</span>
+					</div>
+				</div>
+
+			</div>
 		</div>
 	</div>
 {% endblock %}
