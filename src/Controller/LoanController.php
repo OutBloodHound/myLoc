@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Loan;
 use App\Entity\Item;
+use App\Entity\User;
 use App\Form\LoanFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,23 +25,36 @@ final class LoanController extends AbstractController
     #[Route('/loan/{id}', name: 'app_loan')]
     public function index(Item $item, Request $request, EntityManagerInterface $em): Response{
 
-    $loan = new Loan();
+    if($this->getUser() != $item->getOwner()){
+    
+        $loan = new Loan();
 
-    $form = $this->createForm(LoanFormType::class, $loan);
-    $form-> handleRequest($request);
+        $form = $this->createForm(LoanFormType::class, $loan);
+        $form-> handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()){
-        $loan->setUser($this->getUser());
-        $loan->setItem($item);
+        if ($form->isSubmitted() && $form->isValid()){
+            $loan->setUser($this->getUser());
+            $loan->setItem($item);
 
-        $em->persist($loan);
-        $em->flush();
+            $item->owner
 
-        return $this->redirectToRoute('app_item_show', ['id' => $item->getId()]);
-    }
+            $em->persist($loan);
+            $em->flush();
 
-    return $this->render('loan/index.html.twig', [
-        'form' => $form
-    ]);
+            return $this->redirectToRoute('app_item_show', ['id' => $item->getId()]);
+        }
+
+        return $this->render('loan/index.html.twig', [
+            'form' => $form
+        ]);
+        }else{
+            $this->addFlash(
+                'danger',
+                'Cet objet vous appartient, vous ne pouvez pas le réserver ^^.'
+            );
+            return $this->redirectToRoute('app_item_show', [
+                'id' => $item->getId()
+            ]);
+        }
     }
 }

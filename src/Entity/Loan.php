@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LoanRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LoanRepository::class)]
@@ -15,9 +16,11 @@ class Loan
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\GreaterThanOrEqual('today')]
     private ?\DateTime $start = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\GreaterThanOrEqual(propertyPath: 'start')]
     private ?\DateTime $end = null;
 
     #[ORM\ManyToOne(inversedBy: 'loans')]

@@ -16,6 +16,7 @@
                 <span>{{ app.user.username }}</span>
             </div>
         </div>
+        <a href="#how-it-works" class="btn btn-outline-custom mb-4">Modifier mon profil</a>
 
         {# Métriques #}
         <div class="metrics">
@@ -37,23 +38,23 @@
         <div class="section-title">Mes biens</div>
         <div class="items-grid">
             {% for item in items %}
-            <a href="{{ path('app_item_show', {id: item.id}) }}" class="item-card">
-                <div class="item-thumb">
+            <a href="{{ path('app_item_show', {id: item.id}) }}" class="item-card-show">
+                <div class="item-thumb-show">
                     {% if item.picture %}
                         <img src="{{ asset('uploads/img/' ~ item.picture) }}" alt="{{ item.name }}">
                     {% else %}
                         📦
                     {% endif %}
                 </div>
-                <div class="item-body">
-                    <div class="item-name">{{ item.name }}</div>
+                <div class="item-body-show">
+                    <div class="item-name-show">{{ item.name }}</div>
                     <div class="item-cat">{{ item.category.name }}</div>
                 </div>
             </a>
             {% endfor %}
 
             {# Bouton ajouter #}
-            <a href="#" class="item-add">
+            <a href="{{ path('app_item_add') }}" class="item-add">
                 + Ajouter un bien
             </a>
         </div>

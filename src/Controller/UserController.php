@@ -24,4 +24,11 @@ final class UserController extends AbstractController
         ]);
         
     }
+
+    // #[Route('/user/{id}/edit', name:'app_user')]
+    // public function edit(Id $id): Response
+    // {
+    //     $user = getUser($id);
+
+    // }
 }
