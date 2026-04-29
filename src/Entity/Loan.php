@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LoanRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,5 +81,15 @@ class Loan
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getDayOfLoan(): int
+    {
+        $start = $this->start;
+        $end = $this->end;
+
+        $interval = $start->diff($end);
+
+        return intval($interval->format("%a"));
     }
 }

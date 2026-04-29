@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Loan;
 use App\Entity\Item;
-use App\Entity\User;
-use App\Entity\Category;
 use App\Form\LoanFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,8 +39,11 @@ final class LoanController extends AbstractController
                 $loan->setUser($this->getUser());
                 $loan->setItem($item);
 
+                $duration = $loan->getDayOfLoan();
                 $oldPoints = $user->getPoints();
-                $user->setPoints($oldPoints += $category->getPoints());
+                $earnedPoints = $category->getPoints() * $duration;
+
+                $user->setPoints($oldPoints += $earnedPoints);
 
                 $em->persist($loan);
                 $em->flush();
@@ -64,3 +65,5 @@ final class LoanController extends AbstractController
         }      
     }
 }
+
+

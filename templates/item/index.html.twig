@@ -1,22 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ItemController!
+{% block title %}Nos biens disponibles
 {% endblock %}
 
 {% block body %}
+	<div class="container cat-page-show">
 
-		<div class="container text-center">
-			<div class="gap-3 row row-cols-3">
-				{% for item in items %}
-					<div class="card" style="width: 18rem;">
-						<img src="{{ asset('uploads/img/'~ item.picture ) }}" class="card-img-top" alt="...">
-						<div class="card-body">
-							<h5 class="card-title"> {{  item.name }} </h5>
-							<p class="card-text">{{ item.description|u.truncate(50,'...') }}</p>
-							<a href="item/{{ item.id }}" class="btn btn-primary">Go somewhere</a>
+		<div class="cat-header-show">
+			<h1 class="cat-title-show">Catalogue des biens</h1>
+			<form class="form-inline" method="get" action="{{ path('app_item_index') }}">
+				<input class="form-control" type="search" name="q" placeholder="Rechercher un bien..." aria-label="Rechercher">
+				<button class="btn-outline-search" type="submit">
+					Rechercher
+				</button>
+			</form>
+		</div>
+		
+
+		<div class="items-grid-show">
+			{% for item in items %}
+				<a href="{{ path('app_item_show', {id: item.id}) }}" class="item-card-show">
+					<div class="item-thumb-show">
+						{% if item.picture %}
+							<img src="{{ asset('uploads/img/' ~ item.picture) }}" alt="{{ item.name }}">
+						{% else %}
+							<div class="item-thumb-placeholder-show">📦</div>
+						{% endif %}
+					</div>
+					<div class="item-body-show">
+						<div class="item-name-show">{{ item.name }}</div>
+						<div class="item-desc-show">{{ item.description|u.truncate(80, '...') }}</div>
+						<div class="item-cta-show">
+							<span class="item-btn-show">Voir l'objet →</span>
 						</div>
 					</div>
-				{% endfor %}
-			</div>
+				</a>
+			{% else %}
+				<p class="empty-show">Aucun objet pour le moment.</p>
+			{% endfor %}
 		</div>
+
+	</div>
 {% endblock %}
