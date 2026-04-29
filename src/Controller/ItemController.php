@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Repository\ItemRepository;
 use App\Entity\Item;
 use App\Form\AddItemType;

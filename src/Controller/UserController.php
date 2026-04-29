@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Item;
-use App\Entity\Loan;
-use App\Controller\ItemController;
+use App\Form\EditUserFormType;
+use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -31,4 +33,34 @@ final class UserController extends AbstractController
     //     $user = getUser($id);
 
     // }
+
+    #[Route('/user/edit/{id}', name:'app_edit_user')]
+    public function edit(int $id, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $em, UserRepository $ur): Response
+    {
+        $user = $ur->find($id);
+
+        if($user !== $this->getUser($id)){
+
+            return $this->redirectToRoute('app_home');
+        }else{
+            $form = $this->createForm(EditUserFormType::class, $user);
+            $form = $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $plainPassword = $form->get('password')->getData();
+
+                $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+                $em->persist($user);
+                $em->flush();
+                return $this->redirectToRoute('app_user');
+            }
+            
+            return $this->render('user/editUser.html.twig', [
+                'EditUserFormType' => $form,
+                'user' => $user
+            ]);
+        }
+    }
 }

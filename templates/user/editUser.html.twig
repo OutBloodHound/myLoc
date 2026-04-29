@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un item{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="h3 text-center font-weight-normal my-5">Modifier vos informations</h1>
+        <div class="m-auto w-50">
+            {{ form_errors(EditUserFormType) }}
+
+            {{ form_start(EditUserFormType) }}
+
+                <div class="my-4">
+                    {{ form_widget(EditUserFormType.email, {}) }}
+                </div>
+
+                <div class="my-4">
+                    {{ form_widget(EditUserFormType.password) }}
+                </div>
+
+                <div class="my-4">
+                    {{ form_widget(EditUserFormType.username) }}
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-primary-custom">Ajouter</button>
+            {{ form_end(EditUserFormType) }}
+        </div>
+    </div>
+{% endblock %}

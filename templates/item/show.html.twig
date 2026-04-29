@@ -55,10 +55,8 @@
 				{# Lien vers le formulaire de location #}
 				{% if app.user == item.owner %}
 					<a href="{{ path('app_item_edit', {id: item.id}) }}" class="btn btn-primary-custom w-50 m-auto">Modifier</a>
-				{% elseif app.user %}
-					<a href="{{ path('app_loan', {id: item.id}) }}" class="btn btn-primary-custom w-50 m-auto">Réserver</a>
 				{% else %}
-					<a href="{{ path('app_login') }}" class="btn btn-primary-custom w-50 m-auto">Connexion</a>
+					<a href="{{ path('app_loan', {id: item.id}) }}" class="btn btn-primary-custom w-50 m-auto">Réserver</a>
 				{% endif %}
 					
 					

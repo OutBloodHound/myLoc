@@ -15,7 +15,11 @@
             </div>
 
             <div class="my-4">
-            {{ form_widget(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.username) }}
+            </div>
+
+            <div class="my-4">
+                {{ form_widget(registrationForm.plainPassword) }}
             </div>
 
             {{ form_row(registrationForm.agreeTerms) }}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Loan;
 use App\Entity\Item;
 use App\Entity\User;
+use App\Entity\Category;
 use App\Form\LoanFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,31 +24,36 @@ final class LoanController extends AbstractController
     // }
 
     #[Route('/loan/{id}', name: 'app_loan')]
-    public function index(Item $item, Request $request, EntityManagerInterface $em): Response{
+    public function index(Item $item, Request $request, EntityManagerInterface $em): Response
+    {
 
-    if($this->getUser() != $item->getOwner()){
-    
-        $loan = new Loan();
+        if ($this->getUser() != $item->getOwner()) {
 
-        $form = $this->createForm(LoanFormType::class, $loan);
-        $form-> handleRequest($request);
+            $loan = new Loan();
+            $user = $item->getOwner();
+            $category = $item->getCategory();
 
-        if ($form->isSubmitted() && $form->isValid()){
-            $loan->setUser($this->getUser());
-            $loan->setItem($item);
 
-            $item->owner
+            $form = $this->createForm(LoanFormType::class, $loan);
+            $form->handleRequest($request);
 
-            $em->persist($loan);
-            $em->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $loan->setUser($this->getUser());
+                $loan->setItem($item);
 
-            return $this->redirectToRoute('app_item_show', ['id' => $item->getId()]);
-        }
+                $oldPoints = $user->getPoints();
+                $user->setPoints($oldPoints += $category->getPoints());
 
-        return $this->render('loan/index.html.twig', [
-            'form' => $form
-        ]);
-        }else{
+                $em->persist($loan);
+                $em->flush();
+
+                return $this->redirectToRoute('app_item_show', ['id' => $item->getId()]);
+            }
+
+            return $this->render('loan/index.html.twig', [
+                'form' => $form
+            ]);
+        } else {
             $this->addFlash(
                 'danger',
                 'Cet objet vous appartient, vous ne pouvez pas le réserver ^^.'
@@ -55,6 +61,6 @@ final class LoanController extends AbstractController
             return $this->redirectToRoute('app_item_show', [
                 'id' => $item->getId()
             ]);
-        }
+        }      
     }
 }
